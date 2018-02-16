@@ -30,17 +30,17 @@ printSteps = do
         liftIO $ putStrLn "beg"
         forM_ [1..15] $ \i -> liftIO (print i) >> idle
         liftIO $ putStrLn "end"
-    print "Jeszcze nie zaczynamy"
+    print "Before start"
     b <- current a
-    print "Zaczynamy"
+    print "Start"
     c <- current $ run b
-    print "Srodek"
+    print "Middle-1"
     d <- current $ runFor 5 c
-    print "Srodek2"
+    print "Middle-2"
     e <- current $ finish d
-    print "Koniec"
+    print "End"
     current e
-    print "Po koncu"
+    print "After end"
 
 data DemoState = DemoState
     { lock1   :: Lock
@@ -65,7 +65,7 @@ worker name = do
     idle >> modify (\s -> s { counter = val + 1 })
     write $ "Increased counter to " ++ show (val + 1)
 
-    idle >> write "Fapping furiously"
+    idle >> write "Active"
     withLock lock1 (\l s -> s { lock1 = l }) (idle >> write "waited for lock") $ do
         write "obtained lock"
         forM_ [1..4] $ \i -> idle >> write ("worked " ++ show i)
